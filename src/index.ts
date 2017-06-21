@@ -184,7 +184,7 @@ function encodeGIF(video: HTMLVideoElement, logEl: Element): Promise<Blob> {
 
       if (lastTime === 0 || duration > 1 / FPS) {
         lastTime = video.currentTime;
-        logEl.textContent = `${video.currentTime / video.duration * 100 | 0}%`;
+        logEl.textContent = `Reading ${video.currentTime / video.duration * 100 | 0}%`;
 
         ctx.drawImage(video, 0, 0);
         gif.addFrame(canvas, {
@@ -196,13 +196,16 @@ function encodeGIF(video: HTMLVideoElement, logEl: Element): Promise<Blob> {
       if (!video.ended) {
         requestAnimationFrame(capture);
       } else {
-        logEl.textContent = 'Encoding...';
         gif.render();
       }
     });
 
     gif.on('finished', (blob: Blob) => {
       resolve(blob);
+    });
+
+    gif.on('progress', (p) => {
+      logEl.textContent = `Encoding ${p * 100 | 0}%`;
     });
 
     video.play();
