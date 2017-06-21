@@ -56,18 +56,23 @@ function start() {
     }
   }, 100);
 
-  analyze(document.querySelectorAll('.stream-item, .permalink-container'));
+  analyze(document.querySelectorAll('.AdaptiveMedia-video'));
 }
 
 function analyze(nodes: NodeList): Window[] {
   return Array.prototype.filter.call(nodes, node => {
     return node.nodeType === Node.ELEMENT_NODE &&
-           !node.getAttribute('data-gif') &&
            node.querySelector('.PlayableMedia--gif');
   })
   .forEach(function getMediaContext(el: Element) {
-    el.setAttribute('data-gif', 'true');
-    addDownloadButton(el.querySelector('.PlayableMedia-player'));
+    const player = el.querySelector('.PlayableMedia-player');
+
+    if (player.getAttribute('data-gif')) {
+      return;
+    }
+
+    player.setAttribute('data-gif', 'true');
+    addDownloadButton(player);
   });
 }
 
