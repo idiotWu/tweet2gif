@@ -42,19 +42,21 @@ function start() {
     });
   });
 
-  const timerID = setInterval(() => {
+  poll((cancel) => {
     const container = document.querySelector('#stream-items-id');
 
-    if (container && !container.getAttribute('data-gif-observed')) {
-      observer.observe(container, {
-        childList: true,
-      });
+    if (container) {
+      cancel();
 
-      container.setAttribute('data-gif-observed', 'true');
+      if (!container.getAttribute('data-gif-observed')) {
+        observer.observe(container, {
+          childList: true,
+        });
 
-      clearInterval(timerID);
+        container.setAttribute('data-gif-observed', 'true');
+      }
     }
-  }, 100);
+  });
 
   analyze(document.querySelectorAll('.AdaptiveMedia-video'));
 }
@@ -118,6 +120,7 @@ z-index: 1;
         state = ReadyState.FINISHED;
       })
       .catch((e) => {
+        a.textContent = 'Failed';
         console.error(e);
       });
   });
@@ -126,24 +129,17 @@ z-index: 1;
 }
 
 function getMediaContext(container: Element): Promise<Window> {
-  return new Promise((resolve, reject) => {
-    let cnt = 0;
-
-    const timerID = setInterval(() => {
-      if (cnt > 10) {
-        return reject('cannot find media iframe');
-      }
-
+  return new Promise((resolve) => {
+    poll((cancel) => {
       const iframe = container.querySelector('iframe');
 
       if (!iframe) {
-        cnt++;
         return;
       }
 
-      clearInterval(timerID);
+      cancel();
       resolve(iframe.contentWindow);
-    }, 100);
+    });
   });
 }
 
@@ -216,6 +212,22 @@ function encodeGIF(video: HTMLVideoElement, logEl: Element): Promise<Blob> {
     video.play();
     video.onerror = reject;
   });
+}
+
+function poll(callback: (cancel: () => void) => void) {
+  let cnt = 0;
+
+  const timerID = setInterval(() => {
+    if (++cnt >= 100) {
+      cancel();
+    }
+
+    callback(cancel);
+  }, 100);
+
+  function cancel() {
+    clearInterval(timerID);
+  }
 }
 
 (window as any).analyzeGIF = function analyzeGIF() {
