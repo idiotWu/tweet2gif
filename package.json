@@ -1,0 +1,39 @@
+{
+  "name": "tweet2gif",
+  "version": "0.0.1",
+  "description": "Download videos in tweets as gifs",
+  "main": "dist/tweet2gif.user.js",
+  "scripts": {
+    "test": "npm run lint && npm run build",
+    "lint": "tslint --type-check -t stylish -p .",
+    "build": "webpack",
+    "build:watch": "webpack --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/idiotWu/tweet2gif.git"
+  },
+  "keywords": [
+    "tweet",
+    "gif",
+    "userscript"
+  ],
+  "author": "Dolphin Wood <dolphin.w.e@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/idiotWu/tweet2gif/issues"
+  },
+  "homepage": "https://github.com/idiotWu/tweet2gif#readme",
+  "dependencies": {
+    "gif.js": "^0.2.0",
+    "pseudo-worker": "^1.1.1"
+  },
+  "devDependencies": {
+    "raw-loader": "^0.5.1",
+    "ts-loader": "^2.1.0",
+    "tslint": "^5.4.3",
+    "tslint-config-standard": "^6.0.1",
+    "typescript": "^2.3.4",
+    "webpack": "^3.0.0"
+  }
+}
