@@ -56,7 +56,7 @@ function start() {
     }
   }, 100);
 
-  analyze(document.querySelectorAll('.stream-item'));
+  analyze(document.querySelectorAll('.AdaptiveMedia-video'));
 }
 
 function analyze(nodes: NodeList): Window[] {
