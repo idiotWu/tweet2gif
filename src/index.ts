@@ -11,13 +11,14 @@ enum ReadyState {
 }
 
 const FPS = 15;
+const global: any = window;
 
 const GIFWorker = require('raw-loader!gif.js/dist/gif.worker.js');
 const workerScript = URL.createObjectURL(new Blob([GIFWorker], {
   type: 'text/javascript',
 }));
 
-const MutationObserver = (window as any).MutationObserver || (window as any).WebKitMutationObserver || (window as any).MozMutationObserver;
+const MutationObserver = global.MutationObserver || global.WebKitMutationObserver || global.MozMutationObserver;
 
 start();
 
@@ -230,7 +231,15 @@ function poll(callback: (cancel: () => void) => void) {
   }
 }
 
-(window as any).analyzeGIF = function analyzeGIF() {
+global.analyzeGIF = function analyzeGIF() {
   console.info('starting service...');
   start();
 };
+
+if (!global.eventRegistered) {
+  window.addEventListener('keydown', (evt) => {
+    if (evt.ctrlKey && String.fromCharCode(evt.keyCode) === 'G') {
+      start();
+    }
+  });
+}
