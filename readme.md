@@ -26,7 +26,10 @@ Emmm...you just want to know how to use userscript? Check here: [http://bfy.tw/C
 
 ### I Can't See the "Encode GIF" button
 
-Don't panic. Just open the devtool and type `analyzeGIF()`, then press enter and they will back to you ;)
+Don't panic. There are several ways to activate this script manually:
+
+1. Press `Ctrl+K`
+2. Open the devtool and type `analyzeGIF()`
 
 ### LICENSE
 
