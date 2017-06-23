@@ -36,6 +36,7 @@ module.exports = {
 // @author       ${pkg.author}
 // @match        https://twitter.com/**
 // @grant        none
+// @run-at       document-end
 // @noframes
 // ==/UserScript==
 `
