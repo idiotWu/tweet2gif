@@ -6,6 +6,8 @@ Did you think it's not possible to download the gifs which you saw on Twitter? I
 
 ### Preparation
 
+**⚠️ [Investigating] Unneeded on Chrome >=60 with Tampermonkey >=4.3.6?**
+
 Since we are not able to bypass Twitter's CSP([Content Security Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP)), we fist need some browser extensions to modify the `Content-Security-Policy` HTTP response header. The following is the extension that I am using:
 
 - [Content Security Policy Override](https://chrome.google.com/webstore/detail/content-security-policy-o/lhieoncdgamiiogcllfmboilhgoknmpi)
