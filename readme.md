@@ -30,7 +30,7 @@ Emmm...you just want to know how to use userscript? Check here: [http://bfy.tw/C
 
 Don't panic. There are several ways to activate this script manually:
 
-1. Press `Ctrl+K`
+1. Press `Ctrl+G`
 2. Open the devtool and type `analyzeGIF()`
 
 ### LICENSE
