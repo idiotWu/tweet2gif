@@ -107,8 +107,7 @@ z-index: 1;
     a.textContent = 'Waiting...';
     state = ReadyState.ENCODING;
 
-    getMediaContext(container)
-      .then(getMediaSrc)
+    getMediaSrc(container)
       .then(createVideo)
       .then(video => encodeGIF(video, a))
       .then(blob => {
@@ -129,26 +128,10 @@ z-index: 1;
   container.appendChild(a);
 }
 
-function getMediaContext(container: Element): Promise<Window> {
-  return new Promise((resolve) => {
-    poll((cancel) => {
-      const iframe = container.querySelector('iframe');
+function getMediaSrc(container: Element): Promise<string> {
+  const videoEl = container.querySelector('video');
 
-      if (!iframe) {
-        return;
-      }
-
-      cancel();
-      resolve(iframe.contentWindow);
-    });
-  });
-}
-
-function getMediaSrc(context: Window): Promise<string> {
-  const container = context.document.querySelector('#playerContainer');
-  const config = JSON.parse(container.getAttribute('data-config'));
-
-  return Promise.resolve(config.video_url);
+  return Promise.resolve(videoEl.src);
 }
 
 function createVideo(url: string): Promise<HTMLVideoElement> {
