@@ -10,7 +10,6 @@ enum ReadyState {
   FINISHED,
 }
 
-const FPS = 15;
 const global: any = window;
 
 const GIFWorker = require('raw-loader!gif.js/dist/gif.worker.js');
@@ -151,27 +150,29 @@ function encodeGIF(video: HTMLVideoElement, logEl: Element): Promise<Blob> {
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d');
 
-  canvas.width = video.videoWidth;
-  canvas.height = video.videoHeight;
+  const width = canvas.width = video.videoWidth;
+  const height = canvas.height = video.videoHeight;
 
   const gif = new GIF({
-    workerScript,
+    width, height, workerScript,
     workers: 4,
-    width: video.videoWidth,
-    height: video.videoHeight,
   });
 
   return new Promise((resolve, reject) => {
     let lastTime = video.currentTime;
+    let lastPixels: ImageData;
 
     requestAnimationFrame(function capture() {
+      ctx.drawImage(video, 0, 0);
+      const pixels = ctx.getImageData(0, 0, width, height);
+
       const duration = video.currentTime - lastTime;
+      logEl.textContent = `Reading ${video.currentTime / video.duration * 100 | 0}%`;
 
-      if (lastTime === 0 || duration > 1 / FPS) {
+      if (!lastPixels || !isSameFrame(lastPixels, pixels)) {
+        lastPixels = pixels;
         lastTime = video.currentTime;
-        logEl.textContent = `Reading ${video.currentTime / video.duration * 100 | 0}%`;
 
-        ctx.drawImage(video, 0, 0);
         gif.addFrame(canvas, {
           copy: true,
           delay: duration * 1000,
@@ -196,6 +197,22 @@ function encodeGIF(video: HTMLVideoElement, logEl: Element): Promise<Blob> {
     video.play();
     video.onerror = reject;
   });
+}
+
+function isSameFrame(a: ImageData, b: ImageData): boolean {
+  if (a.data.length !== b.data.length) {
+    return false;
+  }
+
+  const max = a.data.length;
+
+  for (let i = 0; i < max; i++) {
+    if (a.data[i] !== b.data[i]) {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 function poll(callback: (cancel: () => void) => void) {
