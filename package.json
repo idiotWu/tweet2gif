@@ -1,6 +1,6 @@
 {
   "name": "tweet2gif",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Download videos in tweets as gifs",
   "main": "dist/tweet2gif.user.js",
   "scripts": {
